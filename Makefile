@@ -6,7 +6,7 @@ MOCHA_OPTS =
 install:
 	@npm install
 
-test: install test-unit test-cov
+test: test-unit test-cov
 
 test-unit: install
 	@NODE_ENV=test ./node_modules/mocha/bin/mocha \
@@ -21,4 +21,9 @@ test-cov:
 	@$(MAKE) test-unit MOCHA_OPTS='--require blanket' REPORTER=html-cov > coverage.html
 	@$(MAKE) test-unit MOCHA_OPTS='--require blanket' REPORTER=travis-cov
 
-.PHONY: test test-unit test-cov
+test-coveralls:
+	@$(MAKE) test-unit
+	@echo TRAVIS_JOB_ID $(TRAVIS_JOB_ID)
+	@-$(MAKE) test MOCHA_OPTS='--require blanket' REPORTER=mocha-lcov-reporter | ./node_modules/coveralls/bin/coveralls.js
+
+.PHONY: test test-unit test-cov test-coveralls

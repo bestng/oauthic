@@ -10,6 +10,8 @@
   }
 , "devDependencies": {
     "mocha": "*"
+  , "mocha-lcov-reporter": "*"
+  , "coveralls": "*"
   , "should": "*"
   , "restify": "*"
   , "blanket": "*"
@@ -26,4 +28,5 @@
   , "url": "git@github.com:bestng/oauthic.git"
   }
 , "bugs": "https://github.com/bestng/oauthic/issues"
+, "license": "MIT"
 }
