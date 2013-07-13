@@ -1,0 +1,29 @@
+{
+  "name": "oauthic"
+, "version": "0.1.0"
+, "description": "Super-simple OAuth 2.0 request."
+, "main": "index.js"
+, "dependencies": {
+    "async": "~0.2.9"
+  , "request": "~2.22.0"
+  , "underscore": "~1.5.0"
+  }
+, "devDependencies": {
+    "mocha": "*"
+  , "should": "*"
+  , "restify": "*"
+  , "blanket": "*"
+  , "travis-cov": "*"
+  }
+, "scripts": {
+    "test": "make test"
+  , "blanket": { "pattern": "oauthic/index.js" }
+  , "travis-cov": { "threshold": 80 }
+  }
+, "author": "XiNGRZ <chenxingyu92@gmail.com>"
+, "repository": {
+    "type": "git"
+  , "url": "git@github.com:bestng/oauthic.git"
+  }
+, "bugs": "https://github.com/bestng/oauthic/issues"
+}
