@@ -4,9 +4,7 @@
 , "description": "Super-simple OAuth 2.0 request."
 , "main": "index.js"
 , "dependencies": {
-    "async": "~0.2.9"
-  , "request": "~2.22.0"
-  , "underscore": "~1.5.0"
+    "request": "~2.22.0"
   }
 , "devDependencies": {
     "mocha": "*"
