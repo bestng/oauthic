@@ -29,4 +29,5 @@
   }
 , "bugs": "https://github.com/bestng/oauthic/issues"
 , "license": "MIT"
+, "engines" : { "node" : ">=0.8" }
 }
