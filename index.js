@@ -1,8 +1,6 @@
 var request = require('request')
   , inherits = require('util').inherits
 
-exports.BASE_URL = ''
-
 exports.client = function (clientInfo) {
   return new Client(clientInfo)
 }
@@ -10,6 +8,8 @@ exports.client = function (clientInfo) {
 function Client (clientInfo) {
   this.clientInfo = clientInfo
 }
+
+Client.prototype.BASE_URL = ''
 
 Object.keys(request).forEach(function (key) {
   Client.prototype[key] = 'function' === typeof request[key]
@@ -20,10 +20,6 @@ Object.keys(request).forEach(function (key) {
 !['get', 'post', 'put', 'patch', 'head', 'del'].forEach(function (key) {
   var original = Client.prototype[key]
   Client.prototype[key] = function (uri, options, callback) {
-    if (uri && 'string' === typeof uri && '/' === uri.slice(0, 1)) {
-      uri = exports.BASE_URL + uri
-    }
-
     if ('function' === typeof options) {
       callback = options
       options = {}
@@ -32,6 +28,10 @@ Object.keys(request).forEach(function (key) {
     options = options || {}
 
     var self = this
+
+    if (uri && 'string' === typeof uri && '/' === uri.slice(0, 1)) {
+      uri = self.BASE_URL + uri
+    }
 
     if (self.expiresAt && self.expiresAt - new Date() < 60000) {
       if (self.refreshToken && 'function' === typeof self._onRefreshed) {

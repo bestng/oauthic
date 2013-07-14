@@ -85,13 +85,13 @@ oauthic.Client.prototype._authorize = function (options) {
     query['state'] = String(options.state)
   }
 
-  return oauthic.BASE_URL + '/oauth2/authorize?' + stringify(query)
+  return this.BASE_URL + '/oauth2/authorize?' + stringify(query)
 }
 
 oauthic.Client.prototype._credentical = function (code, callback) {
   this.clientInfo = this.clientInfo || {}
 
-  request.post(oauthic.BASE_URL + '/oauth2/token', { form: {
+  request.post(this.BASE_URL + '/oauth2/token', { form: {
     'code': code
   , 'client_id': this.clientInfo.clientId
   , 'client_secret': this.clientInfo.clientSecret
@@ -124,7 +124,7 @@ oauthic.Client.prototype._credentical = function (code, callback) {
 oauthic.Client.prototype._refresh = function (refreshToken, callback) {
   this.clientInfo = this.clientInfo || {}
 
-  request.post(oauthic.BASE_URL + '/oauth2/token', { form: {
+  request.post(this.BASE_URL + '/oauth2/token', { form: {
     'refresh_token': refreshToken
   , 'client_id': this.clientInfo.clientId
   , 'client_secret': this.clientInfo.clientSecret
@@ -169,8 +169,8 @@ describe('oauthic.test.js', function () {
 
   before(function (done) {
     server.listen(0, function () {
-      oauthic.BASE_URL = 'http://localhost:'
-                     + server.address().port
+      oauthic.Client.prototype.BASE_URL = 'http://localhost:'
+                                        + server.address().port
       done()
     })
   })
