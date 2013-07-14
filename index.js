@@ -1,8 +1,6 @@
 var request = require('request')
   , inherits = require('util').inherits
 
-var NODE_ENV = process.env.NODE_ENV || 'development'
-
 exports.BASE_URL = ''
 
 exports.client = function (clientInfo) {
