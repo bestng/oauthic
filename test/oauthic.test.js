@@ -66,14 +66,14 @@ server.post('/oauth2/token', function (req, res, next) {
 // prepares implemented oauthic
 //
 
-oauthic.authorize = function (clientInfo, options) {
-  clientInfo = clientInfo || {}
+oauthic.Client.prototype._authorize = function (options) {
+  this.clientInfo = this.clientInfo || {}
   options = options || {}
 
   var query = {}
 
-  query['client_id'] = clientInfo.clientId
-  query['redirect_uri'] = clientInfo.redirectUri
+  query['client_id'] = this.clientInfo.clientId
+  query['redirect_uri'] = this.clientInfo.redirectUri
 
   if (options.scope) {
     query['scope'] = Array.isArray(options.scope)
@@ -85,17 +85,17 @@ oauthic.authorize = function (clientInfo, options) {
     query['state'] = String(options.state)
   }
 
-  return this.BASE_URL + '/oauth2/authorize?' + stringify(query)
+  return oauthic.BASE_URL + '/oauth2/authorize?' + stringify(query)
 }
 
-oauthic.credentical = function (clientInfo, code, callback) {
-  clientInfo = clientInfo || {}
+oauthic.Client.prototype._credentical = function (code, callback) {
+  this.clientInfo = this.clientInfo || {}
 
-  request.post(this.BASE_URL + '/oauth2/token', { form: {
+  request.post(oauthic.BASE_URL + '/oauth2/token', { form: {
     'code': code
-  , 'client_id': clientInfo.clientId
-  , 'client_secret': clientInfo.clientSecret
-  , 'redirect_uri': clientInfo.redirectUri
+  , 'client_id': this.clientInfo.clientId
+  , 'client_secret': this.clientInfo.clientSecret
+  , 'redirect_uri': this.clientInfo.redirectUri
   , 'grant_type': 'authorization_code'
   }}, function (err, res, body) {
     if (err) {
@@ -121,14 +121,14 @@ oauthic.credentical = function (clientInfo, code, callback) {
   })
 }
 
-oauthic.refresh = function (clientInfo, refreshToken, callback) {
-  clientInfo = clientInfo || {}
+oauthic.Client.prototype._refresh = function (refreshToken, callback) {
+  this.clientInfo = this.clientInfo || {}
 
-  request.post(this.BASE_URL + '/oauth2/token', { form: {
+  request.post(oauthic.BASE_URL + '/oauth2/token', { form: {
     'refresh_token': refreshToken
-  , 'client_id': clientInfo.clientId
-  , 'client_secret': clientInfo.clientSecret
-  , 'redirect_uri': clientInfo.redirectUri
+  , 'client_id': this.clientInfo.clientId
+  , 'client_secret': this.clientInfo.clientSecret
+  , 'redirect_uri': this.clientInfo.redirectUri
   , 'grant_type': 'refresh_token'
   }}, function (err, res, body) {
     if (err) {
@@ -150,11 +150,11 @@ oauthic.refresh = function (clientInfo, refreshToken, callback) {
   })
 }
 
-oauthic.use = function (accessToken, options) {
+oauthic.Client.prototype._use = function (options) {
   options.headers = options.headers || {}
 
-  if (accessToken) {
-    options.headers['Authorization'] = ['Bearer', accessToken].join(' ')
+  if (this.accessToken) {
+    options.headers['Authorization'] = ['Bearer', this.accessToken].join(' ')
   }
 
   return options

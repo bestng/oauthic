@@ -37,7 +37,7 @@ Object.keys(request).forEach(function (key) {
 
     if (self.expiresAt && self.expiresAt - new Date() < 60000) {
       if (self.refreshToken && 'function' === typeof self._onRefreshed) {
-        exports.refresh(self.clientInfo, self.refreshToken, function (err, refreshed) {
+        self._refresh(self.refreshToken, function (err, refreshed) {
           if (err) {
             if ('function' === typeof self._onExpired) {
               self._onExpired(self.accessToken)
@@ -56,7 +56,7 @@ Object.keys(request).forEach(function (key) {
             self.accessToken = refreshed.accessToken
             self.expiresAt = refreshed.expiresAt
 
-            exports.use(self.accessToken, options)
+            self._use(options)
 
             return original(uri, options, callback)
           })
@@ -71,7 +71,7 @@ Object.keys(request).forEach(function (key) {
     }
     else {
       if (self.accessToken) {
-        exports.use(self.accessToken, options)
+        self._use(options)
       }
 
       return original(uri, options, callback)
@@ -80,13 +80,13 @@ Object.keys(request).forEach(function (key) {
 })
 
 Client.prototype.authorize = function (options) {
-  return exports.authorize(this.clientInfo, options)
+  return this._authorize(options)
 }
 
 Client.prototype.credentical = function (code, callback) {
   var self = this
 
-  exports.credentical(self.clientInfo, code, function (err, credentical, userInfo) {
+  self._credentical(code, function (err, credentical, userInfo) {
     if (err) {
       return callback(err)
     }
@@ -133,6 +133,22 @@ Client.prototype.expired = function (onExpired) {
   return this
 }
 
+Client.prototype._authorize = function (options) {
+  throw new Error('You can\'t call this method without override it.')
+}
+
+Client.prototype._credentical = function (code, callback) {
+  throw new Error('You can\'t call this method without override it.')
+}
+
+Client.prototype._refresh = function (refreshToken, callback) {
+  throw new Error('You can\'t call this method without override it.')
+}
+
+Client.prototype._use = function (options) {
+  throw new Error('You can\'t call this method without override it.')
+}
+
 exports.Client = Client
 
 function TokenExpiredError (/* ..., */token) {
@@ -142,22 +158,6 @@ function TokenExpiredError (/* ..., */token) {
 
 exports.TokenExpiredError = TokenExpiredError
 inherits(TokenExpiredError, Error)
-
-exports.authorize = function (clientInfo, options) {
-  throw new Error('You can\'t call this method without override it.')
-}
-
-exports.credentical = function (clientInfo, code, callback) {
-  throw new Error('You can\'t call this method without override it.')
-}
-
-exports.refresh = function (clientInfo, refreshToken, callback) {
-  throw new Error('You can\'t call this method without override it.')
-}
-
-exports.use = function (accessToken, options) {
-  throw new Error('You can\'t call this method without override it.')
-}
 
 function extend (to, from) {
   Object.keys(from).forEach(function (key) {
