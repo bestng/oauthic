@@ -18,7 +18,7 @@
 , "scripts": {
     "test": "make test"
   , "blanket": { "pattern": "oauthic/index.js" }
-  , "travis-cov": { "threshold": 80 }
+  , "travis-cov": { "threshold": 100 }
   }
 , "author": "XiNGRZ <chenxingyu92@gmail.com>"
 , "repository": {

@@ -156,9 +156,3 @@ function TokenExpiredError (/* ..., */token) {
 
 exports.TokenExpiredError = TokenExpiredError
 inherits(TokenExpiredError, Error)
-
-function extend (to, from) {
-  Object.keys(from).forEach(function (key) {
-    to[key] = form[key]
-  })
-}
