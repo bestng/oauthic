@@ -1,4 +1,4 @@
-var request = require('request')
+var request = exports._request = require('request')
   , inherits = require('util').inherits
 
 exports.client = function (clientInfo) {
