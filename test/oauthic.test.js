@@ -82,6 +82,10 @@ describe('oauthic.test.js', function () {
 
   describe('interfaces', function () {
 
+    it('should expose mikeal/request instance as `oauthic._request`', function () {
+      oauthic.should.have.property('_request').with.equal(request)
+    })
+
     describe('oauthic.Client.prototype._authorize()', function () {
       it('should throw without implementing', function () {
         oauthic.Client.prototype._authorize.should.throw()
