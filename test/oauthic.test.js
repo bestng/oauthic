@@ -376,6 +376,32 @@ describe('oauthic.test.js', function () {
           })
         })
 
+        it('`onRefreshed` should accepts only 2 arguments', function (done) {
+          var client = oauthic.client({
+            clientId: 'correct_client_id'
+          , clientSecret: 'correct_client_secret'
+          })
+
+          client.token('expired_token', (token_created_at - 60) * 1000)
+
+          client.refresh('correct_refresh_token', function (refreshed, next) {
+            should.exist(refreshed.accessToken)
+            refreshed.accessToken.should.equal('correct_token')
+
+            should.exist(refreshed.expiresAt)
+            refreshed.expiresAt.should.equal(token_created_at * 1000
+                                           + token_expires_in * 1000)
+
+            next.should.be.a('function')
+
+            next()
+          })
+
+          client.post('/protected', function (err, res, body) {
+            done()
+          })
+        })
+
         it('should renew `client.accessToken` after refreshed', function (done) {
           var client = oauthic.client({
             clientId: 'correct_client_id'

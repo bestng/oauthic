@@ -43,7 +43,7 @@ Object.keys(request).forEach(function (key) {
             return callback(err)
           }
 
-          self._onRefreshed(refreshed.accessToken, refreshed.expiresAt, function (err) {
+          function _then (err) {
             if (err) {
               if ('function' === typeof self._onExpired) {
                 self._onExpired(self.accessToken)
@@ -54,10 +54,17 @@ Object.keys(request).forEach(function (key) {
             self.accessToken = refreshed.accessToken
             self.expiresAt = refreshed.expiresAt
 
-            self._use(options)
+            self._use(options, uri)
 
             return original(uri, options, callback)
-          })
+          }
+
+          if (2 == self._onRefreshed.length) {
+            self._onRefreshed(refreshed, _then)
+          }
+          else {
+            self._onRefreshed(refreshed.accessToken, refreshed.expiresAt, _then)
+          }
         })
       }
       else {
