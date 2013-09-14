@@ -1,6 +1,6 @@
 {
   "name": "oauthic"
-, "version": "0.1.2"
+, "version": "0.2.0"
 , "description": "Yet another beautiful wrapped mikeal/request with OAuth 2.0 feature."
 , "main": "index.js"
 , "dependencies": {
@@ -17,7 +17,7 @@
   }
 , "scripts": {
     "test": "make test"
-  , "blanket": { "pattern": "oauthic/index.js" }
+  , "blanket": { "pattern": "oauthic/lib" }
   , "travis-cov": { "threshold": 100 }
   }
 , "author": "XiNGRZ <chenxingyu92@gmail.com>"
