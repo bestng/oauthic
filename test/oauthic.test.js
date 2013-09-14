@@ -207,14 +207,15 @@ describe('oauthic.test.js', function () {
         })
       }
 
-      oauthic.Client.prototype._use = function (options) {
+      oauthic.Client.prototype._use = function (uri, options, method) {
+        console.log(options)
         options.headers = options.headers || {}
 
         if (this.accessToken) {
           options.headers['Authorization'] = ['Bearer', this.accessToken].join(' ')
         }
 
-        return options
+        return uri
       }
     })
 
@@ -314,7 +315,7 @@ describe('oauthic.test.js', function () {
 
           client.token('expired_token', (token_created_at - 60) * 1000)
 
-          client.refresh('correct_refresh_token', function (token, expiresAt, next) {
+          client.refresh('correct_refresh_token', function (refreshed, next) {
             next()
           })
 
@@ -336,7 +337,7 @@ describe('oauthic.test.js', function () {
 
           client.refreshToken = 'correct_refresh_token'
 
-          client.refresh(function (token, expiresAt, next) {
+          client.refresh(function (refreshed, next) {
             next()
           })
 
@@ -357,13 +358,13 @@ describe('oauthic.test.js', function () {
 
           client.token('expired_token', (token_created_at - 60) * 1000)
 
-          client.refresh('correct_refresh_token', function (token, expiresAt, next) {
-            should.exist(token)
-            token.should.equal('correct_token')
+          client.refresh('correct_refresh_token', function (refreshed, next) {
+            should.exist(refreshed.accessToken)
+            refreshed.accessToken.should.equal('correct_token')
 
-            should.exist(expiresAt)
-            expiresAt.should.equal(token_created_at * 1000
-                                 + token_expires_in * 1000)
+            should.exist(refreshed.expiresAt)
+            refreshed.expiresAt.should.equal(token_created_at * 1000
+                                           + token_expires_in * 1000)
 
             i = 2
 
@@ -376,32 +377,6 @@ describe('oauthic.test.js', function () {
           })
         })
 
-        it('`onRefreshed` should accepts only 2 arguments', function (done) {
-          var client = oauthic.client({
-            clientId: 'correct_client_id'
-          , clientSecret: 'correct_client_secret'
-          })
-
-          client.token('expired_token', (token_created_at - 60) * 1000)
-
-          client.refresh('correct_refresh_token', function (refreshed, next) {
-            should.exist(refreshed.accessToken)
-            refreshed.accessToken.should.equal('correct_token')
-
-            should.exist(refreshed.expiresAt)
-            refreshed.expiresAt.should.equal(token_created_at * 1000
-                                           + token_expires_in * 1000)
-
-            next.should.be.a('function')
-
-            next()
-          })
-
-          client.post('/protected', function (err, res, body) {
-            done()
-          })
-        })
-
         it('should renew `client.accessToken` after refreshed', function (done) {
           var client = oauthic.client({
             clientId: 'correct_client_id'
@@ -410,7 +385,7 @@ describe('oauthic.test.js', function () {
 
           client.token('expired_token', (token_created_at - 60) * 1000)
 
-          client.refresh('correct_refresh_token', function (token, expiresAt, next) {
+          client.refresh('correct_refresh_token', function (refreshed, next) {
             next()
           })
 
@@ -428,7 +403,7 @@ describe('oauthic.test.js', function () {
 
           client.token('expired_token', (token_created_at - 60) * 1000)
 
-          client.refresh('correct_refresh_token', function (token, expiresAt, next) {
+          client.refresh('correct_refresh_token', function (refreshed, next) {
             next('i am an error')
           })
 
@@ -463,7 +438,7 @@ describe('oauthic.test.js', function () {
 
           client.token('expired_token', (token_created_at - 60) * 1000)
 
-          client.refresh('correct_refresh_token', function (token, expiresAt, next) {
+          client.refresh('correct_refresh_token', function (refreshed, next) {
             next('i am an error')
           })
 
@@ -481,7 +456,7 @@ describe('oauthic.test.js', function () {
 
           client.token('expired_token', (token_created_at - 60) * 1000)
 
-          client.refresh('make_error', function (token, expiresAt, next) {
+          client.refresh('make_error', function (refreshed, next) {
             next()
           })
 
@@ -502,7 +477,7 @@ describe('oauthic.test.js', function () {
 
           client.token('expired_token', (token_created_at - 60) * 1000)
 
-          client.refresh('correct_refresh_token', function (token, expiresAt, next) {
+          client.refresh('correct_refresh_token', function (refreshed, next) {
             next()
           })
 
@@ -541,7 +516,7 @@ describe('oauthic.test.js', function () {
 
           client.token('expired_token', (token_created_at - 60) * 1000)
 
-          client.refresh('make_error', function (token, expiresAt, next) {
+          client.refresh('make_error', function (refreshed, next) {
             next()
           })
 
